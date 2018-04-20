@@ -1,0 +1,67 @@
+{% extends 'newsfeed/base.html' %}
+
+{% block body %}
+
+<div class="collapse navbar-collapse" id="sourcesNavBar">
+    <ul class="nav navbar-nav navbar-left">
+        <!--Sort news buttons-->
+        <li>
+            <a href="{% url 'newsfeed:newsfeed' 'favorites' %}">
+                List Favorites <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'newsfeed:newsfeed' 'all' %}">
+                List All <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+            </a>
+        </li>
+    </ul>
+</div>
+
+{% for item in news %}
+<div class="container-fluid newsfeed-container">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="panel panel-default">
+                <table class="table">
+                    <!--News item box-->
+                    <thead>
+                        <tr><th>{{ item.title }}</th></tr>
+                    </thead>
+
+                    <tbody>
+                    <tr><td>
+                        <p>Source: {{ item.source.source_name }}</p>
+                        <p>{{ item.summary }}</p>
+                        <p>Link: <a href="{{ item.link }}">{{ item.link }}</a></p>
+                    </td></tr>
+                    </tbody>
+                </table>
+                <div class="panel-body">
+                    <ul class="nav navbar-nav navbar-left">
+                        <li>
+                            <!--Favorite news button-->
+                            {% if item.favorite %}
+                            <a href="{% url 'newsfeed:favorite' item.id %}">
+                                <span class="glyphicon glyphicon-star-empty" aria-hidden="true"></span>&nbsp; Remove Favorite
+                            </a>
+                            {% else %}
+                            <a href="{% url 'newsfeed:favorite' item.id %}">
+                                <span class="glyphicon glyphicon-star" aria-hidden="true"></span>&nbsp; Make Favorite
+                            </a>
+                            {% endif %}
+                        </li>
+                        <li>
+                            <!--Comments button-->
+                            <a href="{% url 'newsfeed:comments' item.id %}">
+                                <span class="glyphicon glyphicon-comment" aria-hidden="true"></span>&nbsp; {{ item.comments_set.all|length }}
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% endblock %}
